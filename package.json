@@ -1,0 +1,19 @@
+{
+  "name": "game-phaser",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.178",
+    "typescript": "^4.5.4",
+    "vite": "^2.8.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "phaser": "^3.55.2"
+  }
+}
