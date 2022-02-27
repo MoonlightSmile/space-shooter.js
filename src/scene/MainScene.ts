@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 
 import { GameAnims } from ".";
+import Enemy from "../sprites/Enemy";
 
 export default class MainScene extends Phaser.Scene {
   /**
@@ -19,18 +20,6 @@ export default class MainScene extends Phaser.Scene {
    * 角色
    */
   private player!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-  /**
-   * 怪物-small
-   */
-  private enemySmall!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-  /**
-   * 怪物-medium
-   */
-  private enemyMedium!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-  /**
-   * 怪物-big
-   */
-  private enemyBig!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   /**
    * 键盘控制器
    */
@@ -76,25 +65,10 @@ export default class MainScene extends Phaser.Scene {
         this.player.body.enable = true;
       },
     });
-    this.enemySmall = this.physics.add
-      .sprite(200, 500, "enemy-small")
-      .setScale(2)
-      .play(GameAnims["enemy-small_run"]);
-    this.enemyMedium = this.physics.add
-      .sprite(200, 30, "enemy-medium")
-      .setScale(2)
-      .play(GameAnims["enemy-medium_run"]);
-    this.enemyBig = this.physics.add
-      .sprite(200, 100, "enemy-big")
 
-      .setScale(2)
-      .play(GameAnims["enemy-big_run"]);
-    this.physics.collide(this.player, this.enemySmall);
-    this.physics.collide(this.boltsGroup, this.enemySmall);
     this.cursor = this.input.keyboard.createCursorKeys();
-    this.enemyGroup.add(this.enemySmall);
-    this.enemyGroup.add(this.enemyMedium);
-    this.enemyGroup.add(this.enemyBig);
+
+    this.generateEnemy();
     this.physics.add.overlap(this.boltsGroup, this.enemyGroup, (b, e) => {
       b.destroy();
       e.body.enable = false;
@@ -131,6 +105,22 @@ export default class MainScene extends Phaser.Scene {
         });
       });
     });
+  }
+  generateEnemy() {
+    const name = Phaser.Math.RND.pick([
+      "enemy-small",
+      "enemy-medium",
+      "enemy-big",
+    ]);
+    console.log("name", name);
+    this.enemyGroup.add(
+      new Enemy(
+        this,
+        Phaser.Math.RND.between(0 + 16, this.scale.width - 16),
+        0,
+        name
+      )
+    );
   }
   shooter() {
     console.log("shooter");
@@ -173,5 +163,12 @@ export default class MainScene extends Phaser.Scene {
       this.cursor.space.duration = this.cursor.space.getDuration();
     }
     this.checkBolts();
+    this.enemyGroup.children.each((enemy) => {
+      enemy.update();
+    });
+    console.log(this.enemyGroup.children);
+    if (this.enemyGroup.children.entries.length < 4) {
+      this.generateEnemy();
+    }
   }
 }
