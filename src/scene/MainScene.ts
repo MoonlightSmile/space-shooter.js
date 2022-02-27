@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 
 import { GameAnims } from ".";
-import Enemy from "../sprites/Enemy";
+import Enemy, { TEnemy } from "../sprites/Enemy";
 
 export default class MainScene extends Phaser.Scene {
   /**
@@ -73,14 +73,18 @@ export default class MainScene extends Phaser.Scene {
       b.destroy();
       e.body.enable = false;
       this.anims.play({ key: "explosion_run" }, e);
-      this.sound.play("Explode1");
+      this.sound.play("Explode1", {
+        volume: 0.1,
+      });
       e.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
         e.destroy();
       });
     });
     this.physics.add.overlap(this.player, this.enemyGroup, (b) => {
       this.anims.play({ key: "explosion_run" }, b);
-      this.sound.play("Explode1");
+      this.sound.play("Explode1", {
+        volume: 0.1,
+      });
       b.body.enable = false;
       b.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
         this.player.setAlpha(0);
@@ -107,12 +111,11 @@ export default class MainScene extends Phaser.Scene {
     });
   }
   generateEnemy() {
-    const name = Phaser.Math.RND.pick([
+    const name: TEnemy = Phaser.Math.RND.pick([
       "enemy-small",
       "enemy-medium",
       "enemy-big",
     ]);
-    console.log("name", name);
     this.enemyGroup.add(
       new Enemy(
         this,
@@ -124,7 +127,9 @@ export default class MainScene extends Phaser.Scene {
   }
   shooter() {
     console.log("shooter");
-    this.sound.play("Laser_002");
+    this.sound.play("Laser_002", {
+      volume: 0.1,
+    });
     this.boltsGroup.add(
       this.add
         .sprite(this.player.x, this.player.y - (12 + 20), "laser-bolts")
@@ -166,7 +171,6 @@ export default class MainScene extends Phaser.Scene {
     this.enemyGroup.children.each((enemy) => {
       enemy.update();
     });
-    console.log(this.enemyGroup.children);
     if (this.enemyGroup.children.entries.length < 4) {
       this.generateEnemy();
     }
