@@ -5,6 +5,14 @@ import Enemy, { TEnemy } from "../sprites/Enemy";
 
 export default class MainScene extends Phaser.Scene {
   /**
+   * 积分数量
+   */
+  coins: number = 0;
+  /**
+   * 积分显示游戏对象
+   */
+  coinsText!: Phaser.GameObjects.Text;
+  /**
    * 移动速度
    */
   public speed = 5;
@@ -44,6 +52,12 @@ export default class MainScene extends Phaser.Scene {
     this.boltsGroup = this.physics.add.group();
     this.enemyGroup = this.physics.add.group();
 
+    this.coinsText = this.add
+      .text(16, 16, `Coins: ${this.coins}`, {
+        color: "#fff",
+      })
+      .setDepth(9);
+
     this.bg = this.add
       .tileSprite(0, 0, 256, 608, "desert-background")
       .setDisplaySize(this.scale.width, this.scale.height)
@@ -78,6 +92,7 @@ export default class MainScene extends Phaser.Scene {
       });
       e.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
         e.destroy();
+        this.coinsText.text = `Coins: ${(this.coins += 1)}`;
       });
     });
     this.physics.add.overlap(this.player, this.enemyGroup, (b) => {
@@ -147,7 +162,7 @@ export default class MainScene extends Phaser.Scene {
       }
     });
   }
-  update() {
+  update(time: number, delta: number) {
     this.bg.tilePositionY -= 1;
     if (this.cursor.up.isDown) {
       this.player.y -= this.speed;
@@ -169,7 +184,7 @@ export default class MainScene extends Phaser.Scene {
     }
     this.checkBolts();
     this.enemyGroup.children.each((enemy) => {
-      enemy.update();
+      enemy.update(time, delta);
     });
     if (this.enemyGroup.children.entries.length < 4) {
       this.generateEnemy();
