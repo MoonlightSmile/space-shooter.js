@@ -11,7 +11,7 @@ export default class MainScene extends Phaser.Scene {
   /**
    * 积分显示游戏对象
    */
-  coinsText!: Phaser.GameObjects.Text;
+  coinsText!: Phaser.GameObjects.DynamicBitmapText;
   /**
    * 移动速度
    */
@@ -53,10 +53,7 @@ export default class MainScene extends Phaser.Scene {
     this.enemyGroup = this.physics.add.group();
 
     this.coinsText = this.add
-      .text(16, 16, `Coins: ${this.coins}`, {
-        color: "#fff",
-        fontFamily: "Minecraft",
-      })
+      .dynamicBitmapText(16, 16, "Minecraft", `Coins: ${this.coins}`)
       .setDepth(9);
 
     this.bg = this.add
