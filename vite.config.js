@@ -1,8 +1,4 @@
-// vite.config.js
-/**
- * @type {import('vite').UserConfig}
- */
-const config = {
-  // 配置选项
+import { defineConfig } from "vite";
+export default defineConfig({
   base: "/space-shooter.js/dist/",
-};
+});
