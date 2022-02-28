@@ -1,3 +1,4 @@
+import { spriteScale } from "../main";
 import { GameAnims, MainScene } from "../scene";
 import Bullet from "./Bullet";
 const speedMap = {
@@ -17,7 +18,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     this.speed = speedMap[name];
     this.bulletSpeed = this.speed + 2;
     scene.add.existing(this);
-    this.setScale(2);
+    this.setScale(spriteScale);
     const animsName = `${name}_run` as GameAnims;
     this.play(GameAnims[animsName]);
     this.timer = scene.time.addEvent({

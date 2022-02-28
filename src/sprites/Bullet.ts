@@ -1,3 +1,4 @@
+import { spriteScale } from "../main";
 import { GameAnims, MainScene } from "../scene";
 
 export default class Bullet extends Phaser.Physics.Arcade.Sprite {
@@ -5,7 +6,7 @@ export default class Bullet extends Phaser.Physics.Arcade.Sprite {
   constructor(scene: MainScene, x: number, y: number, speed: number) {
     super(scene, x, y, "laser-bolts");
     scene.add.existing(this);
-    this.setScale(2);
+    this.setScale(spriteScale);
     this.speed = speed;
     this.play(GameAnims["bolts2_run"]);
   }

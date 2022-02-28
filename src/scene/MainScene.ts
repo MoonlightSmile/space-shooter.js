@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 
 import { GameAnims } from ".";
+import { spriteScale } from "../main";
 import Enemy, { TEnemy } from "../sprites/Enemy";
 
 export default class MainScene extends Phaser.Scene {
@@ -64,7 +65,7 @@ export default class MainScene extends Phaser.Scene {
     this.coinsText = this.add
       .dynamicBitmapText(16, 16, "Minecraft", `Coins: ${this.coins}`)
       .setDepth(9)
-      .setScale(0.5);
+      .setScale(1);
 
     this.bg = this.add
       .tileSprite(0, 0, 256, 608, "desert-background")
@@ -75,7 +76,7 @@ export default class MainScene extends Phaser.Scene {
       .sprite(this.scale.width / 2, this.scale.height - 32, "ship")
       .setAlpha(0)
       .setCollideWorldBounds()
-      .setScale(2)
+      .setScale(spriteScale)
       .play(GameAnims["ship_run"]);
     this.player.body.enable = false;
 
@@ -164,7 +165,7 @@ export default class MainScene extends Phaser.Scene {
     this.boltsGroup.add(
       this.add
         .sprite(this.player.x, this.player.y - (12 + 20), "laser-bolts")
-        .setScale(2)
+        .setScale(spriteScale)
         .play(GameAnims["bolts1_run"])
     );
   }
