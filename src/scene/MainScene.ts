@@ -27,15 +27,19 @@ export default class MainScene extends Phaser.Scene {
   /**
    * 角色
    */
-  private player!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+  public player!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   /**
    * 键盘控制器
    */
   private cursor!: Phaser.Types.Input.Keyboard.CursorKeys;
   /**
-   * 子弹组
+   * 玩家子弹组
    */
   private boltsGroup!: Phaser.Physics.Arcade.Group;
+  /**
+   * 怪物子弹组
+   */
+  public enemyBoltsGroup!: Phaser.Physics.Arcade.Group;
   /**
    * 怪物组
    */
@@ -45,16 +49,22 @@ export default class MainScene extends Phaser.Scene {
     super({ key: "MainScene" });
   }
   create() {
+    this.boltsGroup = this.physics.add.group();
+    this.enemyGroup = this.physics.add.group({
+      runChildUpdate: true,
+    });
+    this.enemyBoltsGroup = this.physics.add.group({
+      runChildUpdate: true,
+    });
     this.sound.play("music", {
       loop: true,
       volume: 0.2,
     });
-    this.boltsGroup = this.physics.add.group();
-    this.enemyGroup = this.physics.add.group();
 
     this.coinsText = this.add
       .dynamicBitmapText(16, 16, "Minecraft", `Coins: ${this.coins}`)
-      .setDepth(9);
+      .setDepth(9)
+      .setScale(0.5);
 
     this.bg = this.add
       .tileSprite(0, 0, 256, 608, "desert-background")
@@ -92,33 +102,42 @@ export default class MainScene extends Phaser.Scene {
         this.coinsText.text = `Coins: ${(this.coins += 1)}`;
       });
     });
-    this.physics.add.overlap(this.player, this.enemyGroup, (b) => {
-      this.anims.play({ key: "explosion_run" }, b);
-      this.sound.play("Explode1", {
-        volume: 0.1,
-      });
-      b.body.enable = false;
-      b.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-        this.player.setAlpha(0);
-        this.player.setX(this.scale.width / 2);
-        this.player.setY(this.scale.height - 32);
-        this.anims.play({ key: "ship_run" }, b);
-        this.player.setAlpha(1);
+    this.physics.add.overlap(
+      this.player,
+      this.enemyBoltsGroup,
+      this.playerDestroyed.bind(this)
+    );
+    this.physics.add.overlap(
+      this.player,
+      this.enemyGroup,
+      this.playerDestroyed.bind(this)
+    );
+  }
+  playerDestroyed(b: any) {
+    this.coinsText.text = `Coins: ${(this.coins = 0)}`;
 
-        const destroy = this.tweens.add({
-          targets: this.player,
-          y: "-=60",
-          duration: 400,
-          alpha: {
-            from: 1,
-            to: 0,
-          },
-          onComplete: () => {
-            b.body.enable = true;
-            this.player.setAlpha(1);
-            destroy.remove();
-          },
-        });
+    this.anims.play({ key: "explosion_run" }, b);
+    this.sound.play("Explode1", {
+      volume: 0.1,
+    });
+    b.body.enable = false;
+    b.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+      this.player.setAlpha(0);
+      this.player.setX(this.scale.width / 2);
+      this.player.setY(this.scale.height - 32);
+      this.anims.play({ key: "ship_run" }, b);
+      this.player.setAlpha(1);
+
+      const destroy = this.tweens.add({
+        targets: this.player,
+        y: "-=60",
+        duration: 400,
+        alpha: { from: 1, to: 0 },
+        onComplete: () => {
+          b.body.enable = true;
+          this.player.setAlpha(1);
+          destroy.remove();
+        },
       });
     });
   }
@@ -173,17 +192,13 @@ export default class MainScene extends Phaser.Scene {
     if (this.cursor.right.isDown) {
       this.player.x += this.speed;
     }
-    if (this.cursor.space.isDown) {
-      if (this.cursor.space.duration <= 0) {
-        this.shooter();
-      }
-      this.cursor.space.duration = this.cursor.space.getDuration();
+
+    if (Phaser.Input.Keyboard.JustDown(this.cursor.space)) {
+      this.shooter();
     }
     this.checkBolts();
-    this.enemyGroup.children.each((enemy) => {
-      enemy.update(time, delta);
-    });
-    if (this.enemyGroup.children.entries.length < 4) {
+
+    if (this.enemyGroup.children.entries.length < 6) {
       this.generateEnemy();
     }
   }

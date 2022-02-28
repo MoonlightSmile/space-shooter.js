@@ -14,7 +14,7 @@ export default class Preload extends Scene {
 
     // 添加资源
     Object.entries(modules).forEach(([key, value]) => {
-      this.load.setBaseURL("./assets");
+      this.load.setBaseURL("./assets/");
       switch (key) {
         case "audio":
           value.forEach((audio) => {
