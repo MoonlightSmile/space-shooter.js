@@ -39,6 +39,10 @@ export default class Preload extends Scene {
           break;
       }
     });
+    /**
+     * 添加像素字体
+     */
+    this.load.bitmapFont("Minecraft", "font/font.png", "font/font.xml");
 
     this.load.on(Loader.Events.PROGRESS, (v: number) => {
       progress.setText(`${parseInt(String(v * 100))}%`);

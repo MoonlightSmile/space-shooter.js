@@ -55,6 +55,7 @@ export default class MainScene extends Phaser.Scene {
     this.coinsText = this.add
       .text(16, 16, `Coins: ${this.coins}`, {
         color: "#fff",
+        fontFamily: "Minecraft",
       })
       .setDepth(9);
 
