@@ -1,6 +1,6 @@
 space-shooter.js
 ===============
-- 预览地址: https://moonlightsmile.github.io/space-shooter.js/dist/index.html
+- 预览地址: https://moonlightsmile.github.io/space-shooter.js/index.html
 - 上下左右控制，空格发射
 -------------
 # todo:
