@@ -83,7 +83,6 @@ export default class MainScene extends Phaser.Scene {
 
     this.cursor = this.input.keyboard.createCursorKeys();
 
-    this.generateEnemy();
     this.physics.add.overlap(this.boltsGroup, this.enemyGroup, (b, e) => {
       b.destroy();
       e.body.enable = false;
