@@ -1,8 +1,8 @@
 import { Game } from "phaser";
 import "./style.css";
 const dpr = window.devicePixelRatio;
-export const width = 390;
-export const height = 844;
+export const width = 800;
+export const height = 600;
 import { Preload, MainScene } from "./scene";
 
 const game = new Game({
@@ -16,6 +16,7 @@ const game = new Game({
     width,
     height,
   },
+
   physics: {
     default: "arcade",
     arcade: {
@@ -24,3 +25,4 @@ const game = new Game({
   },
 });
 window.g_game = game;
+
