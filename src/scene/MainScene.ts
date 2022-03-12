@@ -76,10 +76,12 @@ export default class MainScene extends Phaser.Scene {
       .sprite(this.scale.width / 2, this.scale.height - 32, "ship")
       .setAlpha(0)
       .setCollideWorldBounds()
-      .setScale(spriteScale)
+      .setScale(spriteScale / 2)
       .play(GameAnims["ship_run"]);
     this.player.body.enable = false;
 
+    this.player.body.isCircle = true;
+    this.player.body.setSize(30, 30);
     this.tweens.add({
       targets: this.player,
       y: "-=60",
@@ -162,12 +164,13 @@ export default class MainScene extends Phaser.Scene {
     this.sound.play("Laser_002", {
       volume: 0.1,
     });
-    this.boltsGroup.add(
-      this.add
-        .sprite(this.player.x, this.player.y - (12 + 20), "laser-bolts")
-        .setScale(spriteScale)
-        .play(GameAnims["bolts1_run"])
-    );
+    const bolts = this.physics.add
+      .sprite(this.player.x, this.player.y - (12 + 20), "laser-bolts")
+      .setScale(spriteScale)
+      .play(GameAnims["bolts1_run"]);
+    bolts.body.setSize(15);
+    bolts.body.isCircle = true;
+    this.boltsGroup.add(bolts);
   }
   checkBolts() {
     this.boltsGroup.children.each((_bolt) => {

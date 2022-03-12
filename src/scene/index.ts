@@ -93,10 +93,10 @@ export const modules: Record<
     },
     {
       key: "ship",
-      url: "ship.bmp",
+      url: "space-shooter.png",
       frame: {
-        frameWidth: 16,
-        frameHeight: 24,
+        frameWidth: 114,
+        frameHeight: 109,
       },
     },
   ],

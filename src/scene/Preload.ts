@@ -54,7 +54,9 @@ export default class Preload extends Scene {
   createAnimations() {
     this.anims.create({
       key: GameAnims["ship_run"],
-      frames: this.anims.generateFrameNumbers("ship", {}),
+      frames: this.anims.generateFrameNumbers("ship", {
+        frames: [0, 1, 2],
+      }),
       repeat: -1,
       frameRate: 10,
     });

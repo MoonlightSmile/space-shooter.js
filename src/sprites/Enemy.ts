@@ -31,9 +31,18 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
    * 怪物子弹发射
    */
   fire() {
-    this.mainScene.enemyBoltsGroup.add(
-      new Bullet(this.mainScene, this.x, this.y + 8 + 4, this.bulletSpeed)
+    const bullet = new Bullet(
+      this.mainScene,
+      this.x,
+      this.y + 8 + 4,
+      this.bulletSpeed
     );
+
+    this.mainScene.enemyBoltsGroup.add(bullet);
+
+    bullet.body.setSize(10);
+    bullet.body.isCircle = true;
+    console.log();
   }
   /**
    * 怪物超出屏幕自动毁灭
