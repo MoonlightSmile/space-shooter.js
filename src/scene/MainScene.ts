@@ -2,6 +2,7 @@ import Phaser from "phaser";
 
 import { GameAnims } from ".";
 import { spriteScale } from "../main";
+import Bullet from "../sprites/Bullet";
 import Enemy, { TEnemy } from "../sprites/Enemy";
 
 export default class MainScene extends Phaser.Scene {
@@ -116,7 +117,11 @@ export default class MainScene extends Phaser.Scene {
       this.playerDestroyed.bind(this)
     );
   }
-  playerDestroyed(b: any) {
+  playerDestroyed(b: any, c: any) {
+    console.log(c);
+    if (c instanceof Bullet) {
+      c.destroy();
+    }
     this.coinsText.text = `Coins: ${(this.coins = 0)}`;
 
     this.anims.play({ key: "explosion_run" }, b);
@@ -130,18 +135,25 @@ export default class MainScene extends Phaser.Scene {
       this.player.setY(this.scale.height - 32);
       this.anims.play({ key: "ship_run" }, b);
       this.player.setAlpha(1);
-
-      const destroy = this.tweens.add({
+      const timeline = this.tweens.createTimeline();
+      timeline.add({
         targets: this.player,
         y: "-=60",
-        duration: 400,
+        duration: 300,
+      });
+      timeline.add({
+        targets: this.player,
         alpha: { from: 1, to: 0 },
+        repeat: 5,
+        duration: 300,
+        yoyo: true,
         onComplete: () => {
+          timeline.destroy();
           b.body.enable = true;
           this.player.setAlpha(1);
-          destroy.remove();
         },
       });
+      timeline.play();
     });
   }
   generateEnemy() {
