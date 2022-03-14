@@ -165,10 +165,11 @@ export default class MainScene extends Phaser.Scene {
       volume: 0.1,
     });
     const bolts = this.physics.add
-      .sprite(this.player.x, this.player.y - (12 + 20), "laser-bolts")
+      .sprite(this.player.x, this.player.y - (12 + 20), "ship")
       .setScale(spriteScale)
-      .play(GameAnims["bolts1_run"]);
-    bolts.body.setSize(15);
+      .setFrame(18);
+
+    bolts.body.setSize(10);
     bolts.body.isCircle = true;
     this.boltsGroup.add(bolts);
   }

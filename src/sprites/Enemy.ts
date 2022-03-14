@@ -40,7 +40,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     this.mainScene.enemyBoltsGroup.add(bullet);
 
-    bullet.body.setSize(10);
+    bullet.body.setSize(8);
     bullet.body.isCircle = true;
     console.log();
   }

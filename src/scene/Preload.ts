@@ -96,7 +96,11 @@ export default class Preload extends Scene {
     });
     this.anims.create({
       key: GameAnims["explosion_run"],
-      frames: this.anims.generateFrameNumbers("explosion", {}),
+      frameRate: 20,
+      frames: this.anims.generateFrameNumbers("ship", {
+        start: 9,
+        end: 17,
+      }),
     });
   }
   create() {

@@ -23,6 +23,7 @@ const game = new Game({
   physics: {
     default: "arcade",
     arcade: {
+      // debug: true,
       gravity: { y: 0 },
     },
   },
