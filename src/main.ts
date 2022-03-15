@@ -29,3 +29,21 @@ const game = new Game({
   },
 });
 window.g_game = game;
+
+window.addEventListener("blur", () => togglePlay(false));
+window.addEventListener("focus", () => togglePlay(true));
+
+document.addEventListener("visibilitychange", () => {
+  togglePlay(document.visibilityState === "visible");
+});
+function togglePlay(needPlay: boolean) {
+  const mainScene = game.scene.getScene("MainScene").scene;
+  if (!mainScene) return;
+  if (needPlay) {
+    mainScene.resume();
+    game.sound.resumeAll();
+  } else {
+    game.sound.pauseAll();
+    mainScene.pause();
+  }
+}

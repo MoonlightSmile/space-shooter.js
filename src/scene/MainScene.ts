@@ -32,7 +32,7 @@ export default class MainScene extends Phaser.Scene {
   /**
    * 玩家子弹组
    */
-  private boltsGroup!: Phaser.Physics.Arcade.Group;
+  public boltsGroup!: Phaser.Physics.Arcade.Group;
   /**
    * 怪物子弹组
    */
