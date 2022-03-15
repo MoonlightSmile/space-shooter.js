@@ -1,9 +1,7 @@
 import Phaser from "phaser";
-
-import { GameAnims } from ".";
-import { spriteScale } from "../main";
 import Bullet from "../sprites/Bullet";
 import Enemy, { TEnemy } from "../sprites/Enemy";
+import Player from "../sprites/Player";
 
 export default class MainScene extends Phaser.Scene {
   /**
@@ -29,11 +27,8 @@ export default class MainScene extends Phaser.Scene {
   /**
    * 角色
    */
-  public player!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-  /**
-   * 键盘控制器
-   */
-  private cursor!: Phaser.Types.Input.Keyboard.CursorKeys;
+  public player!: Player;
+
   /**
    * 玩家子弹组
    */
@@ -73,26 +68,11 @@ export default class MainScene extends Phaser.Scene {
       .setDisplaySize(this.scale.width, this.scale.height)
       .setOrigin(0);
 
-    this.player = this.physics.add
-      .sprite(this.scale.width / 2, this.scale.height - 32, "ship")
-      .setAlpha(0)
-      .setCollideWorldBounds()
-      .setScale(spriteScale / 2)
-      .play(GameAnims["ship_run"]);
-    this.player.body.enable = false;
-
-    this.player.body.isCircle = true;
-    this.player.body.setSize(30, 30);
-    this.tweens.add({
-      targets: this.player,
-      y: "-=60",
-      alpha: 1,
-      onComplete: () => {
-        this.player.body.enable = true;
-      },
-    });
-
-    this.cursor = this.input.keyboard.createCursorKeys();
+    this.player = new Player(
+      this,
+      this.scale.width / 2,
+      this.scale.height - 32
+    );
 
     this.physics.add.overlap(this.boltsGroup, this.enemyGroup, (b, e) => {
       b.destroy();
@@ -171,20 +151,7 @@ export default class MainScene extends Phaser.Scene {
       )
     );
   }
-  shooter() {
-    console.log("shooter");
-    this.sound.play("Laser_002", {
-      volume: 0.1,
-    });
-    const bolts = this.physics.add
-      .sprite(this.player.x, this.player.y - (12 + 20), "ship")
-      .setScale(spriteScale)
-      .setFrame(18);
 
-    bolts.body.setSize(10);
-    bolts.body.isCircle = true;
-    this.boltsGroup.add(bolts);
-  }
   checkBolts() {
     this.boltsGroup.children.each((_bolt) => {
       const bolt = _bolt as Phaser.Physics.Arcade.Sprite;
@@ -197,22 +164,7 @@ export default class MainScene extends Phaser.Scene {
   }
   update(time: number, delta: number) {
     this.bg.tilePositionY -= 1;
-    if (this.cursor.up.isDown) {
-      this.player.y -= this.speed;
-    }
-    if (this.cursor.down.isDown) {
-      this.player.y += this.speed;
-    }
-    if (this.cursor.left.isDown) {
-      this.player.x -= this.speed;
-    }
-    if (this.cursor.right.isDown) {
-      this.player.x += this.speed;
-    }
-
-    if (Phaser.Input.Keyboard.JustDown(this.cursor.space)) {
-      this.shooter();
-    }
+    this.player.update();
     this.checkBolts();
 
     if (this.enemyGroup.children.entries.length < 6) {
