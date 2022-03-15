@@ -29,14 +29,24 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.scene.sound.play("Laser_002", {
       volume: 0.1,
     });
-    const bolts = this.scene.physics.add
-      .sprite(this.x, this.y - (12 + 20), "ship")
-      .setScale(spriteScale)
-      .setFrame(18);
+    const bolts = [
+      this.x,
+      this.x - 20,
+      this.x - 40,
+      this.x + 20,
+      this.x + 40,
+    ].map((x) => {
+      const bolt = this.scene.physics.add
+        .sprite(x, this.y - (12 + 20), "ship")
+        .setScale(spriteScale)
+        .setFrame(18);
 
-    bolts.body.setSize(10);
-    bolts.body.isCircle = true;
-    (this.scene as MainScene).boltsGroup.add(bolts);
+      bolt.body.setSize(10);
+      bolt.body.isCircle = true;
+      return bolt;
+    });
+
+    (this.scene as MainScene).boltsGroup.addMultiple(bolts);
   }
   setSkin() {
     const skins = [28, 29, 30].map((frame) =>
