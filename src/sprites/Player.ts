@@ -7,12 +7,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
    * 键盘控制器
    */
   private cursor!: Phaser.Types.Input.Keyboard.CursorKeys;
-  skin?: Phaser.GameObjects.Sprite;
+  private skins: Phaser.GameObjects.Group;
   constructor(scene: MainScene, x: number, y: number) {
     super(scene, x, y, "ship");
     scene.add.existing(this);
 
     scene.physics.world.enable(this);
+    this.skins = scene.add.group();
     this.setCollideWorldBounds(true);
     this.body.setSize(35);
     this.body.isCircle = true;
@@ -38,11 +39,15 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     (this.scene as MainScene).boltsGroup.add(bolts);
   }
   setSkin() {
-    this.skin = this.scene.add.sprite(this.x, this.y, "ship");
-    this.skin.setFrame(30);
+    const skins = [28, 29, 30].map((frame) =>
+      this.scene.add.sprite(this.x, this.y, "ship").setFrame(frame)
+    );
+    this.skins.addMultiple(skins);
   }
   skinFollowPlayer() {
-    this.skin?.setPosition(this.x, this.y);
+    this.skins.children.each((e) =>
+      (e as Phaser.GameObjects.Sprite).setPosition(this.x, this.y)
+    );
   }
   update(...args: any[]): void {
     if (this.cursor.up.isDown) {
