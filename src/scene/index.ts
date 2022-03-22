@@ -95,8 +95,8 @@ export const modules: Record<
       key: "ship",
       url: "space-shooter.png",
       frame: {
-        frameWidth: 114,
-        frameHeight: 109,
+        frameWidth: 128,
+        frameHeight: 128,
       },
     },
   ],

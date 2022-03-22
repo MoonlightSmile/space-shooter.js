@@ -62,13 +62,17 @@ export default class Preload extends Scene {
     });
     this.anims.create({
       key: GameAnims["enemy-small_run"],
-      frames: this.anims.generateFrameNumbers("enemy-small", {}),
+      frames: this.anims.generateFrameNumbers("ship", {
+        frames: [70, 71, 72],
+      }),
       repeat: -1,
       frameRate: 10,
     });
     this.anims.create({
       key: GameAnims["enemy-medium_run"],
-      frames: this.anims.generateFrameNumbers("enemy-medium", {}),
+      frames: this.anims.generateFrameNumbers("ship", {
+        frames: [73, 74]
+      }),
       repeat: -1,
       frameRate: 10,
     });

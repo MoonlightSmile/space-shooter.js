@@ -13,14 +13,17 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
   mainScene: MainScene;
   timer: Phaser.Time.TimerEvent;
   constructor(scene: MainScene, x: number, y: number, name: TEnemy) {
-    super(scene, x, y, name);
+    super(scene, x, y, "ship");
     this.mainScene = scene;
     this.speed = speedMap[name];
     this.bulletSpeed = this.speed + 2;
     scene.add.existing(this);
-    this.setScale(spriteScale);
+    scene.physics.world.enable(this);
+    this.body.setSize(55, 55);
+    this.setScale(spriteScale * 0.7);
     const animsName = `${name}_run` as GameAnims;
     this.play(GameAnims[animsName]);
+    this.rotation = Math.PI
     this.timer = scene.time.addEvent({
       callback: this.fire.bind(this),
       loop: true,
