@@ -41,11 +41,13 @@ export default class MainScene extends Phaser.Scene {
    * 怪物组
    */
   private enemyGroup!: Phaser.Physics.Arcade.Group;
-
+  blood!: Phaser.GameObjects.Group;
   constructor() {
     super({ key: "MainScene" });
   }
   create() {
+    this.add.group
+    this.add.text(this.scale.width / 2, this.scale.height / 2, "游戏开始")
     this.boltsGroup = this.physics.add.group();
     this.enemyGroup = this.physics.add.group({
       runChildUpdate: true,
@@ -68,6 +70,28 @@ export default class MainScene extends Phaser.Scene {
       .setDisplaySize(this.scale.width, this.scale.height)
       .setOrigin(0);
 
+    this.blood = this.add.group()
+    const a1 = this
+      .add
+      .sprite(0, this.scale.height, "ship")
+      .setOrigin(0, 1)
+      .setFrame(0)
+      .setDisplaySize(40, 40)
+    this.blood.add(a1)
+    const a2 = this
+      .add
+      .sprite(a1.getRightCenter().x, this.scale.height, "ship")
+      .setOrigin(0, 1)
+      .setFrame(0)
+      .setDisplaySize(40, 40)
+    this.blood.add(a2)
+    const a3 = this
+      .add
+      .sprite(a2.getRightCenter().x, this.scale.height, "ship")
+      .setOrigin(0, 1)
+      .setFrame(0)
+      .setDisplaySize(40, 40)
+    this.blood.add(a3)
     this.player = new Player(
       this,
       this.scale.width / 2,
@@ -98,49 +122,63 @@ export default class MainScene extends Phaser.Scene {
     );
   }
   playerDestroyed(b: any, c: any) {
-    console.log(c);
     if (c instanceof Bullet) {
       c.destroy();
     }
-    this.coinsText.text = `Coins: ${(this.coins = 0)}`;
+    if (b instanceof Player) {
+      b.blood -= 1
+      const bl = this.blood.children.entries[b.blood] as Phaser.GameObjects.Sprite
 
-    this.anims.play({ key: "explosion_run" }, b);
-    this.sound.play("Explode1", {
-      volume: 0.1,
-    });
-    b.body.enable = false;
-    b.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-      this.player.setAlpha(0);
-      this.player.setX(this.scale.width / 2);
-      this.player.setY(this.scale.height - 32);
-      this.anims.play({ key: "ship_run" }, b);
-      this.player.setAlpha(1);
-      const timeline = this.tweens.createTimeline();
-      timeline.add({
-        targets: this.player,
-        y: "-=60",
-        duration: 300,
+      bl.setAlpha(0)
+      this.sound.play("001", {
+        volume: 0.1,
       });
-      timeline.add({
-        targets: this.player,
-        alpha: { from: 1, to: 0 },
-        repeat: 5,
-        duration: 300,
-        yoyo: true,
-        onComplete: () => {
-          timeline.destroy();
-          b.body.enable = true;
+      if (b.blood <= 0) {
+        this.coinsText.text = `Coins: ${(this.coins = 0)}`;
+
+        this.anims.play({ key: "explosion_run" }, b);
+        this.sound.play("Explode1", {
+          volume: 0.1,
+        });
+        b.body.enable = false;
+        this.player.blood = 3
+        this.blood.children.each(e => {
+          (e as Phaser.GameObjects.Sprite).setAlpha(1)
+        })
+        b.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+          this.player.setAlpha(0);
+          this.player.setX(this.scale.width / 2);
+          this.player.setY(this.scale.height - 32);
+          this.anims.play({ key: "ship_run" }, b);
           this.player.setAlpha(1);
-        },
-      });
-      timeline.play();
-    });
+          const timeline = this.tweens.createTimeline();
+          timeline.add({
+            targets: this.player,
+            y: "-=60",
+            duration: 300,
+          });
+          timeline.add({
+            targets: this.player,
+            alpha: { from: 1, to: 0 },
+            repeat: 5,
+            duration: 300,
+            yoyo: true,
+            onComplete: () => {
+              timeline.destroy();
+              b.body.enable = true;
+              b.setAlpha(1);
+            },
+          });
+          timeline.play();
+        });
+      }
+    }
   }
   generateEnemy() {
     const name: TEnemy = Phaser.Math.RND.pick([
       "enemy-small",
       "enemy-medium",
-      "enemy-big",
+      // "enemy-big",
     ]);
     this.enemyGroup.add(
       new Enemy(

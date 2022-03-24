@@ -2,10 +2,15 @@ import { spriteScale } from "../main";
 import { GameAnims, MainScene } from "../scene";
 import Bullet from "./Bullet";
 const speedMap = {
-  "enemy-small": 4,
+  "enemy-small": 2,
   "enemy-medium": 3,
   "enemy-big": 2,
 };
+const SizeMap = {
+  "enemy-small": [40, 40],
+  "enemy-medium": [100, 80],
+  "enemy-big": [2, 2],
+}
 export type TEnemy = "enemy-small" | "enemy-medium" | "enemy-big";
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
   speed: number;
@@ -19,8 +24,10 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     this.bulletSpeed = this.speed + 2;
     scene.add.existing(this);
     scene.physics.world.enable(this);
-    this.body.setSize(55, 55);
-    this.setScale(spriteScale * 0.7);
+    const [w, h] = SizeMap[name];
+    this.body.setSize(w, h);
+    this.setScale(spriteScale * 0.5);
+
     const animsName = `${name}_run` as GameAnims;
     this.play(GameAnims[animsName]);
     this.rotation = Math.PI

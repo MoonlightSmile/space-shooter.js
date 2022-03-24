@@ -36,6 +36,7 @@ export const modules: Record<
   }[]
 > = {
   audio: [
+    { key: "001", url: "001.wav" },
     { key: "Explode1", url: "Explode1.wav" },
     { key: "Hit_Hurt2", url: "Hit_Hurt2.wav" },
     { key: "Jump1", url: "Jump1.wav" },

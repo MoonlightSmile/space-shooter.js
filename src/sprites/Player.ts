@@ -6,6 +6,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   /**
    * 键盘控制器
    */
+  blood: number = 3;
   private cursor!: Phaser.Types.Input.Keyboard.CursorKeys;
   private skins: Phaser.GameObjects.Group;
   constructor(scene: MainScene, x: number, y: number) {
@@ -32,9 +33,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     const bolts = [
       this.x,
       this.x - 20,
-      this.x - 40,
+      // this.x - 40,
       this.x + 20,
-      this.x + 40,
+      // this.x + 40,
     ].map((x) => {
       const bolt = this.scene.physics.add
         .sprite(x, this.y - (12 + 20), "ship")
@@ -49,10 +50,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     (this.scene as MainScene).boltsGroup.addMultiple(bolts);
   }
   setSkin() {
-    const skins = [28, 29, 30].map((frame) =>
-      this.scene.add.sprite(this.x, this.y, "ship").setFrame(frame)
-    );
-    this.skins.addMultiple(skins);
+    // const skins = [28, 29, 30].map((frame) =>
+    //   this.scene.add.sprite(this.x, this.y, "ship").setFrame(frame)
+    // );
+    // this.skins.addMultiple(skins);
   }
   skinFollowPlayer() {
     this.skins.children.each((e) =>
